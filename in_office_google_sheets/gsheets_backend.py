@@ -2,16 +2,17 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import streamlit as st
-import json
 
-# Setup scope and credentials from secrets
+# Define scope for Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-json_key = json.loads(json.dumps(st.secrets["google_service_account"]))
+
+# ✅ Read credentials directly from secrets (no json.dumps needed)
+json_key = dict(st.secrets["google_service_account"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(json_key, scope)
 
-# Authorize client
+# Authorize client and access spreadsheet
 client = gspread.authorize(creds)
-sheet = client.open("InOffice Data")  # Make sure this matches your actual Google Sheet name
+sheet = client.open("InOffice Data")  # Change name if your sheet is different
 
 def read_sheet(sheet_name):
     worksheet = sheet.worksheet(sheet_name)
